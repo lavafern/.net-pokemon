@@ -1,10 +1,10 @@
 ﻿namespace pokemon.Models
 {
-    public class Owner
+    public class Reviewer
     {
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<OwnerOnPokemon> ownerOnPokemons {get; set;}
+        public ICollection<ReviewOnPokemon> ReviewOnPokemons { get; set;}
     }
 }
