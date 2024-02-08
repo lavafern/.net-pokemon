@@ -16,8 +16,34 @@ namespace pokemon.Repository
 
         public ICollection<pokemonDto> GetPokemons()
         {
-            return _context.Pokemons.Select(p => new pokemonDto { }).ToList();
+            return _context.Pokemons.Select(p => new pokemonDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                BirthDate = p.BirthDate,
+                Power = p.Power,
+                OwnerOnPokemons = p.OwnerOnPokemons,
+                ElementOnPokemons = p.ElementOnPokemons,
+                ReviewOnPokemons = p.ReviewOnPokemons
+
+            }).ToList();
            
+        }
+
+        public Pokemon GetPokemonById(int id)
+        {
+                return _context.Pokemons.Where(p => p.Id == id).First();
+        }
+
+        public Pokemon GetPokemonByName(string name)
+        {
+            return _context.Pokemons.Where(p => p.Name == name).First();
+        }
+
+        public bool PokemonIsExist(int id) 
+        {
+            return _context.Pokemons.Any(p => p.Id == id);
         }
     }
 }

@@ -4,7 +4,7 @@ using pokemon.Repository;
 
 namespace pokemon.Controllers
 {
-    [Route("/")]
+    [Route("/v1/pet")]
     [ApiController]
     public class PokemonController : Controller
     {
@@ -23,6 +23,20 @@ namespace pokemon.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return Ok(pokemons);
 
+        }
+
+        [HttpGet("{pokeId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult GetPokemonById(int pokeId)
+        {
+            if (!_pokemonReposetory.PokemonIsExist(pokeId)) return NotFound("awawwa");
+
+            var pokemon = _pokemonReposetory.GetPokemonById(pokeId);
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            return Ok(pokemon);
         }
 
         //[HttpGet]
