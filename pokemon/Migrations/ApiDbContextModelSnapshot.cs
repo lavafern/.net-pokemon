@@ -36,6 +36,9 @@ namespace pokemon.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Elements");
                 });
 

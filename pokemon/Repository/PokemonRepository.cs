@@ -23,9 +23,6 @@ namespace pokemon.Repository
                 Description = p.Description,
                 BirthDate = p.BirthDate,
                 Power = p.Power,
-                OwnerOnPokemons = p.OwnerOnPokemons,
-                ElementOnPokemons = p.ElementOnPokemons,
-                ReviewOnPokemons = p.ReviewOnPokemons
 
             }).ToList();
            

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using pokemon.Interfaces;
+using pokemon.Models;
+using pokemon.Models.dto;
 using pokemon.Repository;
 
 namespace pokemon.Controllers
@@ -16,7 +18,7 @@ namespace pokemon.Controllers
 
 
         [HttpGet]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(200, Type = typeof(ICollection<pokemonDto>))]
         public IActionResult GetPokemons()
         {
             var pokemons = _pokemonReposetory.GetPokemons();
@@ -26,11 +28,11 @@ namespace pokemon.Controllers
         }
 
         [HttpGet("{pokeId}")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(200, Type = typeof(Pokemon))]
         [ProducesResponseType(400)]
         public IActionResult GetPokemonById(int pokeId)
         {
-            if (!_pokemonReposetory.PokemonIsExist(pokeId)) return NotFound("awawwa");
+            if (!_pokemonReposetory.PokemonIsExist(pokeId)) return NotFound();
 
             var pokemon = _pokemonReposetory.GetPokemonById(pokeId);
 
@@ -38,16 +40,6 @@ namespace pokemon.Controllers
 
             return Ok(pokemon);
         }
-
-        //[HttpGet]
-        //[ProducesResponseType(200)]
-        //public ActionResult GetPokemons() {
-
-        //    var pokemons = _pokemonReposetory.GetPokemons();
-
-        //    if (!ModelState.IsValid) return BadRequest(ModelState);
-
-        //    return Ok(pokemons);
-        //}
+        
     }
 }
