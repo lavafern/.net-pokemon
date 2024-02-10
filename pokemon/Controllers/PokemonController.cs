@@ -23,12 +23,18 @@ namespace pokemon.Controllers
         {
             var pokemons = _pokemonReposetory.GetPokemons();
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            return Ok(pokemons);
+
+            SuccessDto<pokemonDto> result = new SuccessDto<pokemonDto>
+            {
+                Data = pokemons
+            };
+
+            return Ok(result);
 
         }
 
         [HttpGet("{pokeId}")]
-        [ProducesResponseType(200, Type = typeof(Pokemon))]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult GetPokemonById(int pokeId)
         {
@@ -38,7 +44,12 @@ namespace pokemon.Controllers
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            return Ok(pokemon);
+            SuccessDto<Pokemon> result = new SuccessDto<Pokemon>
+            {
+                Data = pokemon
+            };
+
+            return Ok(result);
         }
         
     }

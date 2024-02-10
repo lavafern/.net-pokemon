@@ -29,14 +29,25 @@ namespace pokemon.Controllers
                 return BadRequest();
             }
 
-            return Ok(elemets);
+            SuccessDto<ICollection<ElementDto>> result = new SuccessDto<ICollection<ElementDto>>
+            {
+                Data = elemets
+            };
+
+            return Ok(result);
         }
 
         [HttpGet("{elementId}")]
         [ProducesResponseType(200)]
         public IActionResult GetPokemonByElement(int elementId)
         {
+            var checkElement = _elementRepository.IsElementExist(elementId);
+
+
             var pokemons = _elementRepository.GetPokemonByElements(elementId);
+
+            if (!checkElement) return NotFound();
+
 
             if (!ModelState.IsValid)
             {
@@ -45,7 +56,14 @@ namespace pokemon.Controllers
                 return BadRequest();
             }
 
-            return Ok(pokemons);
+            SuccessDto<ICollection<ElementOnPokemonDto>> result = new SuccessDto<ICollection<ElementOnPokemonDto>>
+            {
+                Data = pokemons
+            };
+
+            if (pokemons.ToList().Count < 1) return BadRequest();
+
+            return Ok(result);
         }
 
         

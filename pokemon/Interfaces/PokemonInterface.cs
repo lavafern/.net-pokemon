@@ -11,5 +11,9 @@ namespace pokemon.Interfaces
         Pokemon GetPokemonByName(string name);
 
         bool PokemonIsExist(int id);
+
+        Pokemon AddPokemon(Pokemon pokemon, int ownerId, IEnumerable<int> elementIds);
+
+        bool Save();
     }
 }
