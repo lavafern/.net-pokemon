@@ -48,18 +48,46 @@ namespace pokemon.Repository
 
         public Pokemon AddPokemon(Pokemon pokemon, int ownerId, IEnumerable<int> elementIds)
         {
-            bool checkOwner = _ownerRepository.IsOwnerExist(ownerId);
 
-            if (!checkOwner) throw new OwnerNoutFoundException();
-
-            Pokemon newPokemon = new Pokemon()
+            try
             {
-                Name = pokemon.Name,
-                Description = pokemon.Description,
-                Power = pokemon.Power,
-                BirthDate = pokemon.BirthDate,
-                ElementOnPokemons = elementIds
-            };
+
+                bool checkOwner = _ownerRepository.IsOwnerExist(ownerId);
+
+                if (!checkOwner) throw new OwnerNoutFoundException();
+
+                ICollection<ElementOnPokemon> elementOnPokemon = elementIds.Select(e => new ElementOnPokemon
+                {
+                    ElementId = e,
+                    PokemonId = pokemon.Id,
+                }).ToList();
+
+                Pokemon newPokemon = new Pokemon()
+                {
+                    Name = pokemon.Name,
+                    Description = pokemon.Description,
+                    Power = pokemon.Power,
+                    BirthDate = pokemon.BirthDate,
+                    ElementOnPokemons = elementOnPokemon,
+                    OwnerOnPokemons = new List<OwnerOnPokemon>
+                {
+                    new OwnerOnPokemon
+                    {
+                        OwnerId = ownerId,
+                        PokemonId = pokemon.Id
+                    }
+                }
+                };
+
+                return newPokemon;
+
+            } catch ( Exception e)
+            {
+                Console.WriteLine(e);
+                throw new Exception();
+            }
+
+
 
 
         }
