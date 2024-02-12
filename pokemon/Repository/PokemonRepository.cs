@@ -10,8 +10,8 @@ namespace pokemon.Repository
     public class PokemonRepository : PokemonInterface
     {
         private readonly ApiDbContext _context;
-        private readonly OwnerRepository _ownerRepository;
-        public PokemonRepository(ApiDbContext context,OwnerRepository ownerRepository)
+        private readonly OwnerInterface _ownerRepository;
+        public PokemonRepository(ApiDbContext context,OwnerInterface ownerRepository)
         {
             _context = context;
             _ownerRepository = ownerRepository;
@@ -46,7 +46,7 @@ namespace pokemon.Repository
             return _context.Pokemons.Any(p => p.Id == id);
         }
 
-        public Pokemon AddPokemon(Pokemon pokemon, int ownerId, IEnumerable<int> elementIds)
+        public Pokemon AddPokemon(AddPokemonDto pokemon, int ownerId, IEnumerable<int> elementIds)
         {
 
             try
@@ -56,34 +56,43 @@ namespace pokemon.Repository
 
                 if (!checkOwner) throw new OwnerNoutFoundException();
 
-                ICollection<ElementOnPokemon> elementOnPokemon = elementIds.Select(e => new ElementOnPokemon
-                {
-                    ElementId = e,
-                    PokemonId = pokemon.Id,
-                }).ToList();
 
                 Pokemon newPokemon = new Pokemon()
                 {
                     Name = pokemon.Name,
                     Description = pokemon.Description,
                     Power = pokemon.Power,
-                    BirthDate = pokemon.BirthDate,
-                    ElementOnPokemons = elementOnPokemon,
-                    OwnerOnPokemons = new List<OwnerOnPokemon>
-                {
-                    new OwnerOnPokemon
-                    {
-                        OwnerId = ownerId,
-                        PokemonId = pokemon.Id
-                    }
-                }
+                    BirthDate = pokemon.BirthDate
+
                 };
+
+                newPokemon.OwnerOnPokemons = new List<OwnerOnPokemon>
+                    {
+                        new OwnerOnPokemon
+                        {
+                            OwnerId = ownerId,
+                            PokemonId = newPokemon.Id
+                        }
+                    };
+
+                ICollection<ElementOnPokemon> elementOnPokemon = elementIds.Select(e => new ElementOnPokemon
+                {
+                    ElementId = e,
+                    PokemonId = newPokemon.Id
+                }).ToList();
+
+
+                newPokemon.ElementOnPokemons = elementOnPokemon;
+
+                _context.Pokemons.Add(newPokemon);
+                _context.SaveChanges();
 
                 return newPokemon;
 
-            } catch ( Exception e)
+            }
+            catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine(e.ToString());
                 throw new Exception();
             }
 
@@ -91,7 +100,7 @@ namespace pokemon.Repository
 
 
         }
-       
+
         public bool Save()
         {
             throw new NotImplementedException();

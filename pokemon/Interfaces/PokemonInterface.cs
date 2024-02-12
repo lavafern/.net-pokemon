@@ -12,7 +12,7 @@ namespace pokemon.Interfaces
 
         bool PokemonIsExist(int id);
 
-        Pokemon AddPokemon(Pokemon pokemon, int ownerId, IEnumerable<int> elementIds);
+        Pokemon AddPokemon(AddPokemonDto pokemon, int ownerId, IEnumerable<int> elementIds);
 
         bool Save();
     }

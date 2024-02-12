@@ -6,7 +6,7 @@ using pokemon.Repository;
 
 namespace pokemon.Controllers
 {
-    [Route("/v1/pet")]
+    [Route("/v1/pokemons")]
     [ApiController]
     public class PokemonController : Controller
     {
@@ -21,10 +21,10 @@ namespace pokemon.Controllers
         [ProducesResponseType(200, Type = typeof(ICollection<pokemonDto>))]
         public IActionResult GetPokemons()
         {
-            var pokemons = _pokemonReposetory.GetPokemons();
+            ICollection<pokemonDto> pokemons = _pokemonReposetory.GetPokemons();
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            SuccessDto<pokemonDto> result = new SuccessDto<pokemonDto>
+            SuccessDto<ICollection<pokemonDto>> result = new SuccessDto<ICollection<pokemonDto>>
             {
                 Data = pokemons
             };
@@ -34,7 +34,7 @@ namespace pokemon.Controllers
         }
 
         [HttpGet("{pokeId}")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(200, Type = typeof(SuccessDto<Pokemon>))]
         [ProducesResponseType(400)]
         public IActionResult GetPokemonById(int pokeId)
         {
@@ -50,6 +50,24 @@ namespace pokemon.Controllers
             };
 
             return Ok(result);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200, Type = typeof(SuccessDto<Pokemon>))]
+        public IActionResult AddPokemon([FromQuery] int ownerId, [FromBody] AddPokemonDto pokemonData)
+        {
+            Pokemon newPokemon = _pokemonReposetory.AddPokemon(pokemonData, ownerId, pokemonData.elementIds);
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            SuccessDto<Pokemon> result = new SuccessDto<Pokemon>
+            {
+                Data = newPokemon
+            };
+
+
+            return Ok("good");
+
         }
         
     }
