@@ -7,7 +7,7 @@ namespace pokemon.Controllers
 {
     [Route("/v1/elements")]
     [ApiController]
-    public class ElementController : Controller
+    public class ElementController : ControllerBase
     {
         private readonly ElementInterface _elementRepository;
 

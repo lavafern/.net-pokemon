@@ -57,7 +57,7 @@ namespace pokemon.Repository
                 if (!checkOwner) throw new OwnerNoutFoundException();
 
 
-                Pokemon newPokemon = new Pokemon()
+                Pokemon newPokemon = new Pokemon
                 {
                     Name = pokemon.Name,
                     Description = pokemon.Description,
