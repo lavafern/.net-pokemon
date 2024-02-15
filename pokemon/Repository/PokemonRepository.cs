@@ -139,6 +139,28 @@ namespace pokemon.Repository
             }
         }
 
+        public bool DeletePokemon(int pokemonId)
+        {
+            try
+            {
+
+                this.PokemonIsExist(pokemonId);
+
+                var pokemonToDelte = _context.Pokemons.Where(p => p.Id == pokemonId).FirstOrDefault();
+
+                _context.Pokemons.Remove(pokemonToDelte);
+                _context.SaveChanges();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+
+        }
+
         public bool Save()
         {
             throw new NotImplementedException();

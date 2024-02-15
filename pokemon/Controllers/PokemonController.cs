@@ -3,6 +3,7 @@ using pokemon.Interfaces;
 using pokemon.Models;
 using pokemon.Models.dto;
 using pokemon.Repository;
+using System.Text.Json;
 
 namespace pokemon.Controllers
 {
@@ -84,8 +85,26 @@ namespace pokemon.Controllers
             {
                 Data = editedPokemon
             };
+
+            Console.WriteLine("Console loggin object :");
+            Console.WriteLine(JsonSerializer.Serialize(editedPokemon));
+
             return Ok(result);
         }
-        
+
+
+        [HttpDelete("{pokeId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult deletePokemon(int pokeId)
+        {
+            _pokemonReposetory.DeletePokemon(pokeId);
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            return Ok();
+        }
+
+
     }
 }

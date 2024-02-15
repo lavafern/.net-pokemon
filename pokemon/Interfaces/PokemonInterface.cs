@@ -16,6 +16,7 @@ namespace pokemon.Interfaces
 
         Pokemon EditPokemon(int pokemonId,AddPokemonDto pokemon,int ownerId, IEnumerable<int> elementIds);
 
+        bool DeletePokemon(int pokemonId);
         bool Save();
     }
 }
