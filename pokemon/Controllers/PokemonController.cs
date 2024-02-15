@@ -21,10 +21,10 @@ namespace pokemon.Controllers
         [ProducesResponseType(200, Type = typeof(ICollection<pokemonDto>))]
         public IActionResult GetPokemons()
         {
-            ICollection<pokemonDto> pokemons = _pokemonReposetory.GetPokemons();
+            ICollection<pokemonGetAllDto> pokemons = _pokemonReposetory.GetPokemons();
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            SuccessDto<ICollection<pokemonDto>> result = new SuccessDto<ICollection<pokemonDto>>
+            SuccessDto<ICollection<pokemonGetAllDto>> result = new SuccessDto<ICollection<pokemonGetAllDto>>
             {
                 Data = pokemons
             };
@@ -68,6 +68,23 @@ namespace pokemon.Controllers
 
             return Ok("good");
 
+        }
+
+        [HttpPut("{pokeId}/{ownerId}")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        public IActionResult EditPokemon(int pokeId,int ownerId, [FromBody] AddPokemonDto pokemonData)
+        {
+            if (pokemonData == null) return BadRequest();
+            if (pokeId == null) return BadRequest();
+
+            Pokemon editedPokemon = _pokemonReposetory.EditPokemon(pokeId, pokemonData, ownerId,pokemonData.elementIds);
+
+            SuccessDto<Pokemon> result = new SuccessDto<Pokemon>
+            {
+                Data = editedPokemon
+            };
+            return Ok(result);
         }
         
     }

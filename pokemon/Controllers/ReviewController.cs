@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using pokemon.Interfaces;
 using pokemon.Models;
 using pokemon.Models.dto;
@@ -26,17 +27,22 @@ namespace pokemon.Controllers
         {
             ReviewOnPokemon newReview = _reviewInterface.AddReview(reviewData);
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            
-            SuccessDto<string> result = new SuccessDto<string>()
+
+            Console.WriteLine("poks :");
+            Console.WriteLine(newReview.ToString());
+
+            SuccessDto<ReviewOnPokemon> result = new SuccessDto<ReviewOnPokemon>()
             {
-                Data = JsonSerializer.Serialize(new
-                {
-                    rate = newReview.Rate,
-                    content = newReview.Content,
-                    reviewer = newReview.Reviewer.Name,
-                    pokemon = newReview.PokemonId
-                })
+                Data = newReview
             };
+
+            //var res = JsonConvert.SerializeObject(result, Formatting.Indented,
+            //            new JsonSerializerSettings
+            //            {
+            //                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            //            });
+
+
 
             return Ok(result);
         }

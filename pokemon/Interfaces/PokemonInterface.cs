@@ -5,7 +5,7 @@ namespace pokemon.Interfaces
 {
     public interface PokemonInterface
     {
-        ICollection<pokemonDto> GetPokemons();
+        ICollection<pokemonGetAllDto> GetPokemons();
 
         Pokemon GetPokemonById(int id);
         Pokemon GetPokemonByName(string name);
@@ -13,6 +13,8 @@ namespace pokemon.Interfaces
         bool PokemonIsExist(int id);
 
         Pokemon AddPokemon(AddPokemonDto pokemon, int ownerId, IEnumerable<int> elementIds);
+
+        Pokemon EditPokemon(int pokemonId,AddPokemonDto pokemon,int ownerId, IEnumerable<int> elementIds);
 
         bool Save();
     }

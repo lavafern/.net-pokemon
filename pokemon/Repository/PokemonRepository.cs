@@ -17,16 +17,18 @@ namespace pokemon.Repository
             _ownerRepository = ownerRepository;
         }
 
-        public ICollection<pokemonDto> GetPokemons()
+        public ICollection<pokemonGetAllDto> GetPokemons()
         {
-            return _context.Pokemons.Select(p => new pokemonDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                BirthDate = p.BirthDate,
-                Power = p.Power,
 
+            return _context.Pokemons.Select(p => new pokemonGetAllDto
+            {
+                pokemon = p,
+                elementName = _context.ElementOnPokemons.Where(eop => eop.PokemonId == p.Id)
+                                .Join(_context.Elements,
+                                 eop => eop.ElementId,
+                                 e => e.Id,
+                                 (eop, e) => e.Name
+                                ).ToList()
             }).ToList();
            
         }
@@ -99,6 +101,42 @@ namespace pokemon.Repository
 
 
 
+        }
+
+        public Pokemon EditPokemon(int pokemonId,AddPokemonDto pokemon, int ownerId, IEnumerable<int> elementIds)
+        {
+            try
+            {
+                bool checkOwner = _ownerRepository.IsOwnerExist(ownerId);
+
+                ICollection<ElementOnPokemon> elementToDelete = _context.ElementOnPokemons.Where(e => e.PokemonId == pokemonId).ToList();
+
+                _context.ElementOnPokemons.RemoveRange(elementToDelete);
+                _context.SaveChanges();
+
+                Pokemon updatedPokemon = this.GetPokemonById(pokemonId);
+
+                updatedPokemon.Power = pokemon.Power;
+                updatedPokemon.Description = pokemon.Description;
+                updatedPokemon.Name = pokemon.Name;
+                updatedPokemon.BirthDate = pokemon.BirthDate;
+                updatedPokemon.ElementOnPokemons = elementIds.Select(e => new ElementOnPokemon
+                {
+                    ElementId = e,
+                    PokemonId = updatedPokemon.Id
+                }).ToList();
+
+
+                _context.SaveChanges();
+
+                return updatedPokemon;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public bool Save()
